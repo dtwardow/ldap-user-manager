@@ -1,7 +1,9 @@
-LDAP User Manager
+LDAP User Manager (forked from wheelybird/ldap-user-manager)
 --
 
 A PHP web-based interface for LDAP user account management and self-service password change.
+
+This image is slightly modified to run behind a reverse proxy without usage of SSL/TLS.
 
 
 Purpose
@@ -43,7 +45,6 @@ docker run \
            --detach \
            --name=lum \
            -p 80:80 \
-           -p 443:443 \
            -e "SERVER_HOSTNAME=lum.example.com" \
            -e "LDAP_URI=ldap://ldap.example.com" \
            -e "LDAP_BASE_DN=dc=example,dc=com" \
@@ -52,7 +53,7 @@ docker run \
            -e "LDAP_ADMIN_BIND_DN=cn=admin,dc=example,dc=com" \
            -e "LDAP_ADMIN_BIND_PWD=secret"\
            -e "EMAIL_DOMAIN=example.com"\
-           wheelybird/ldap-user-manager
+           dtwardow/ldap-user-manager
 ```
 Now go to https://lum.example.com/setup.
 
@@ -101,27 +102,6 @@ Optional:
 * `LOGIN_TIMEOUT_MINS` (default: 10 minutes):  How long before an idle session will be timed out.
    
 * `SITE_NAME` (default: *LDAP user manager*):  Change this to replace the title in the menu.  e.g. "My Company"
-
-
-Webserver SSL setup
----
-
-The webserver (Apache HTTPD) expects to find `/opt/ssl/server.key` and `/opt/ssl/server.crt`, and these certificates should match `SERVER_HOSTNAME`.   
-If those files aren't found then the startup script will create self-signed certificates based on `SERVER_HOSTNAME`.  To use your own key and certificate then you need to bind-mount a directory containing them to `/opt/ssl`.  The script will also look for `/opt/ssl/chain.pem` if you need to add a certificate chain file (the Apache `SSLCertificateChainFile` option).
-   
-e.g.:
-```
-docker run \
-           --detach \
-           --name=lum \
-           -p 80:80 \
-           -p 443:443 \
-           -e SERVER_HOSTNAME=lum.example.com \
-           -v /your/ssl/cert/dir:/opt/ssl \
-           ...
-           ...
-
-```
 
 Initial setup
 ---
