@@ -8,11 +8,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends libldb-dev libl
 RUN docker-php-source extract && docker-php-ext-install -j$(nproc) ldap && docker-php-source delete
 
 RUN chmod a+x /usr/local/bin/entrypoint
-RUN a2enmod rewrite ssl
+RUN a2enmod rewrite
 RUN a2dissite 000-default default-ssl
 
 EXPOSE 80
-EXPOSE 443
 
 CMD ["apache2-foreground"]
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
